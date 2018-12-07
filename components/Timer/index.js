@@ -1,42 +1,39 @@
-import React, {Component } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import {
+    connect
+} from 'react-redux';
+import {
+    bindActionCreators
+} from 'redux';
+import {
+    actionCreators as justActions
+} from '../../reducer';
+import Timer from './presenter';
 
-class Timer extends Component {
-    render() {
-        return (
-            <View style={styles.container}>
-                <StatusBar barStyle={"light-conbtent"} />
-                <View style={styles.upper}>
-                    <Text style={styles.time}>25:00</Text>
-                </View>
-                <View style={styles.lower}>
-                    <Text>BUTTONS HERE</Text>
-                </View>
-            </View>
-        )
+function mapStateToProps(state) {
+    const {
+        isPlaying,
+        elapsedTime,
+        timerDuration
+    } = state;
+
+    return {
+        isPlaying,
+        elapsedTime,
+        timerDuration
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex : 1,
-        backgroundColor : "#58E0CF"
-    },
-    upper: {
-        flex : 2,
-        justifyContent : "center",
-        alignItems : "center"
-    },
-    lower: {
-        flex : 1,
-        justifyContent : "center",
-        alignItems : "center"
-    },
-    time: {
-        color : "white",
-        fontSize : 120,
-        fontWeight : "100"
-    }
-});
+function mapDispatchToProps(dispatch) {
+    console.log(`justActions : ${justActions}`)
+    return {
+        startTimer: bindActionCreators(justActions.startTimer, dispatch),
+        pauseTimer: bindActionCreators(justActions.pauseTimer, dispatch),
+        stopTimer: bindActionCreators(justActions.stopTimer, dispatch),
+        addSecond: bindActionCreators(justActions.addSecond, dispatch),
 
-export default Timer
+        setTimerDuration: (value) => {
+            return dispatch(justActions.setTimerDuration(value)); 
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);
